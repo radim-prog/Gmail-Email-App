@@ -1,21 +1,26 @@
+
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, List, PieChart, Settings, Mail } from 'lucide-react';
 
-import { Proposal, Rule, StatsData, ChatMessage } from './types';
-import { INITIAL_PROPOSALS, INITIAL_RULES, INITIAL_STATS } from './services/mockData';
+import { Proposal, Rule, StatsData, ChatMessage, InboxEmail } from './types';
+import { INITIAL_PROPOSALS, INITIAL_RULES, INITIAL_STATS, MOCK_INBOX_EMAILS } from './services/mockData';
 import { parseUserCommand } from './services/geminiService';
 
+import { InboxTab } from './components/InboxTab';
 import { ProposalsTab } from './components/ProposalsTab';
 import { RulesTab } from './components/RulesTab';
 import { StatsTab } from './components/StatsTab';
 import { ChatWidget } from './components/ChatWidget';
 
-type Tab = 'proposals' | 'rules' | 'stats' | 'settings';
+type Tab = 'inbox' | 'proposals' | 'rules' | 'stats' | 'settings';
 
 export default function App() {
   // --- State ---
-  const [activeTab, setActiveTab] = useState<Tab>('proposals');
+  const [activeTab, setActiveTab] = useState<Tab>('inbox');
   
+  const [inboxEmails, setInboxEmails] = useState<InboxEmail[]>(MOCK_INBOX_EMAILS);
+  const [selectedEmail, setSelectedEmail] = useState<InboxEmail | null>(null);
+
   const [proposals, setProposals] = useState<Proposal[]>(INITIAL_PROPOSALS);
   const [rules, setRules] = useState<Rule[]>(INITIAL_RULES);
   const [stats, setStats] = useState<StatsData>(INITIAL_STATS);
@@ -77,6 +82,24 @@ export default function App() {
 
   const handleCreateManualRule = () => {
     alert("Funkce pro manuální vytvoření pravidla by zde otevřela modální okno.");
+  };
+
+  // --- Handlers: Inbox ---
+  const handleSelectEmail = (email: InboxEmail) => {
+    setSelectedEmail(email);
+    console.log('Selected email:', email);
+  };
+
+  const handleForward = (emailId: string, to: string[], message: string) => {
+    console.log('Forwarding email:', emailId, 'to:', to, 'message:', message);
+    // TODO: API call pro forward
+    alert(`Email přeposlán na: ${to.join(', ')}`);
+  };
+
+  const handleAIResponse = (emailId: string) => {
+    console.log('Generate AI response for email:', emailId);
+    // TODO: AI response generation
+    alert('AI response - coming soon!');
   };
 
   // --- Chat Logic ---
@@ -143,6 +166,13 @@ export default function App() {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-1 items-center">
+              <NavButton 
+                active={activeTab === 'inbox'} 
+                onClick={() => setActiveTab('inbox')} 
+                icon={<Mail className="w-4 h-4"/>}
+              >
+                Inbox
+              </NavButton>
               <NavButton active={activeTab === 'proposals'} onClick={() => setActiveTab('proposals')} icon={<List className="w-4 h-4"/>}>Návrhy</NavButton>
               <NavButton active={activeTab === 'rules'} onClick={() => setActiveTab('rules')} icon={<LayoutDashboard className="w-4 h-4"/>}>Pravidla</NavButton>
               <NavButton active={activeTab === 'stats'} onClick={() => setActiveTab('stats')} icon={<PieChart className="w-4 h-4"/>}>Statistiky</NavButton>
@@ -159,6 +189,15 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'inbox' && (
+          <InboxTab
+            emails={inboxEmails}
+            onSelectEmail={handleSelectEmail}
+            onForward={handleForward}
+            onAIResponse={handleAIResponse}
+          />
+        )}
+
         {activeTab === 'proposals' && (
           <ProposalsTab 
             proposals={proposals} 
@@ -201,6 +240,12 @@ export default function App() {
 
       {/* Mobile Bottom Navigation */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-2 z-40">
+          <MobileNavButton 
+            active={activeTab === 'inbox'} 
+            onClick={() => setActiveTab('inbox')} 
+            icon={<Mail size={20}/>} 
+            label="Inbox" 
+          />
           <MobileNavButton active={activeTab === 'proposals'} onClick={() => setActiveTab('proposals')} icon={<List size={20}/>} label="Návrhy" />
           <MobileNavButton active={activeTab === 'rules'} onClick={() => setActiveTab('rules')} icon={<LayoutDashboard size={20}/>} label="Pravidla" />
           <MobileNavButton active={activeTab === 'stats'} onClick={() => setActiveTab('stats')} icon={<PieChart size={20}/>} label="Stats" />

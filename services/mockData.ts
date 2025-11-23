@@ -1,4 +1,5 @@
-import { Proposal, Rule, StatsData } from '../types';
+
+import { Proposal, Rule, StatsData, InboxEmail } from '../types';
 
 export const INITIAL_PROPOSALS: Proposal[] = [
   {
@@ -127,3 +128,54 @@ export const INITIAL_STATS: StatsData = {
     { name: 'Týden 4', value: 41 },
   ]
 };
+
+export const MOCK_INBOX_EMAILS: InboxEmail[] = [
+  {
+    email_id: 'e1',
+    from: { email: 'petr.novak@firma.cz', name: 'Petr Novák' },
+    subject: 'Dotaz na nabídku cloudových služeb',
+    snippet: 'Dobrý den, chtěl bych se zeptat na vaši nabídku cloudových služeb pro firmu s ~50 zaměstnanci...',
+    body: 'Dobrý den,\n\nchtěl bych se zeptat na vaši nabídku cloudových služeb pro firmu s ~50 zaměstnanci.\n\nJaká je cena a jak dlouho trvá implementace?\n\nS pozdravem,\nPetr Novák',
+    date: '2025-11-23T14:32:00Z',
+    is_read: false,
+    has_attachment: false,
+    labels: [],
+    ai_recommendation: {
+      action: 'respond',
+      urgency: 'medium',
+      reason: 'Obchodní dotaz vyžaduje odpověď'
+    }
+  },
+  {
+    email_id: 'e2',
+    from: { email: 'anna.svobodova@client.cz', name: 'Anna Svobodová' },
+    subject: 'Potvrzení schůzky na úterý',
+    snippet: 'Dobrý den, potvrzuji schůzku na úterý v 14:00.',
+    body: 'Dobrý den,\n\npotvrzuji schůzku na úterý v 14:00.\n\nDěkuji,\nAnna',
+    date: '2025-11-23T12:15:00Z',
+    is_read: false,
+    has_attachment: false,
+    labels: [],
+    ai_recommendation: {
+      action: 'quick_reply',
+      urgency: 'low',
+      quick_replies: ['👍 Potvrzeno', '✅ Těším se', '📅 V pořádku']
+    }
+  },
+  {
+    email_id: 'e3',
+    from: { email: 'newsletter@shop.cz', name: 'Shop.cz' },
+    subject: 'Black Friday slevy až -70%!',
+    snippet: 'Využijte naši největší akci roku. Black Friday slevy až -70% na vybrané produkty!',
+    body: 'Využijte naši největší akci roku. Black Friday slevy až -70% na vybrané produkty!\n\nNeváhejte a nakupujte ještě dnes!',
+    date: '2025-11-23T10:20:00Z',
+    is_read: false,
+    has_attachment: false,
+    labels: [],
+    ai_recommendation: {
+      action: 'auto_delete',
+      rule_id: 'rule_5',
+      reason: 'Pravidlo #5: Mazat marketing od shop.cz'
+    }
+  }
+];

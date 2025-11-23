@@ -1,3 +1,4 @@
+
 export type ActionType = 'archive' | 'delete' | 'keep' | 'mark_important' | 'label';
 export type SemanticType = 'invoice' | 'marketing' | 'newsletter' | 'notification' | 'update' | 'security';
 export type RuleStatus = 'active' | 'paused';
@@ -61,4 +62,49 @@ export interface CommandResponse {
   intent: 'unblock_sender' | 'granular_rule' | 'list_rules' | 'pause_rule' | 'delete_rule' | 'unknown';
   parameters?: Record<string, any>;
   response_text: string;
+}
+
+// Inbox Email
+export interface InboxEmail {
+  email_id: string;
+  from: {
+    email: string;
+    name: string;
+  };
+  subject: string;
+  snippet: string;
+  body?: string;
+  date: string;
+  is_read: boolean;
+  has_attachment: boolean;
+  labels: string[];
+  ai_recommendation?: {
+    action: 'respond' | 'quick_reply' | 'auto_delete';
+    urgency?: 'low' | 'medium' | 'high';
+    reason?: string;
+    quick_replies?: string[];
+    rule_id?: string;
+  };
+}
+
+// Contact
+export interface Contact {
+  contact_id: string;
+  name: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  company?: string;
+  department?: string;
+  position?: string;
+  type: 'internal' | 'external' | 'client' | 'vendor';
+  tags: string[];
+  email_count: number;
+  last_contact: string;
+  forward_count: number;
+  reply_count: number;
+  is_favorite: boolean;
+  favorite_rank: number;
+  created_at: string;
+  updated_at: string;
 }
