@@ -130,45 +130,32 @@ export const INITIAL_STATS: StatsData = {
 };
 
 export const MOCK_INBOX_EMAILS: InboxEmail[] = [
+  // 1. Vyžaduje pozornost - high urgency
   {
     email_id: 'e1',
-    from: { email: 'petr.novak@firma.cz', name: 'Petr Novák' },
-    subject: 'Dotaz na nabídku cloudových služeb',
-    snippet: 'Dobrý den, chtěl bych se zeptat na vaši nabídku cloudových služeb pro firmu s ~50 zaměstnanci...',
-    body: 'Dobrý den,\n\nchtěl bych se zeptat na vaši nabídku cloudových služeb pro firmu s ~50 zaměstnanci.\n\nJaká je cena a jak dlouho trvá implementace?\n\nS pozdravem,\nPetr Novák',
-    date: '2025-11-23T14:32:00Z',
+    from: { email: 'billing@provider.cz', name: 'Provider CZ' },
+    subject: 'URGENTNÍ: Odpojení služby za 24 hodin',
+    snippet: 'Nezaplatili jste fakturu, služba bude odpojená...',
+    body: 'Vážený zákazníku,\n\nevidujeme úhradu faktury za minulé období. Pokud nebude částka uhrazena do 24 hodin, budeme nuceni omezit poskytované služby.\n\nS pozdravem,\nProvider CZ',
+    date: '2025-11-23T16:00:00Z',
     is_read: false,
     has_attachment: false,
     labels: [],
     ai_recommendation: {
       action: 'respond',
-      urgency: 'medium',
-      reason: 'Obchodní dotaz vyžaduje odpověď'
+      urgency: 'high',
+      reason: 'Urgentní platební upomínka'
     }
   },
+
+  // 2. AI navrhuje smazat
   {
     email_id: 'e2',
-    from: { email: 'anna.svobodova@client.cz', name: 'Anna Svobodová' },
-    subject: 'Potvrzení schůzky na úterý',
-    snippet: 'Dobrý den, potvrzuji schůzku na úterý v 14:00.',
-    body: 'Dobrý den,\n\npotvrzuji schůzku na úterý v 14:00.\n\nDěkuji,\nAnna',
-    date: '2025-11-23T12:15:00Z',
-    is_read: false,
-    has_attachment: false,
-    labels: [],
-    ai_recommendation: {
-      action: 'quick_reply',
-      urgency: 'low',
-      quick_replies: ['👍 Potvrzeno', '✅ Těším se', '📅 V pořádku']
-    }
-  },
-  {
-    email_id: 'e3',
-    from: { email: 'newsletter@shop.cz', name: 'Shop.cz' },
-    subject: 'Black Friday slevy až -70%!',
-    snippet: 'Využijte naši největší akci roku. Black Friday slevy až -70% na vybrané produkty!',
+    from: { email: 'marketing@shop.cz', name: 'Shop.cz' },
+    subject: 'Black Friday - slevy až 70%!',
+    snippet: 'Nejlepší nabídky roku...',
     body: 'Využijte naši největší akci roku. Black Friday slevy až -70% na vybrané produkty!\n\nNeváhejte a nakupujte ještě dnes!',
-    date: '2025-11-23T10:20:00Z',
+    date: '2025-11-23T14:00:00Z',
     is_read: false,
     has_attachment: false,
     labels: [],
@@ -176,6 +163,60 @@ export const MOCK_INBOX_EMAILS: InboxEmail[] = [
       action: 'auto_delete',
       rule_id: 'rule_5',
       reason: 'Pravidlo #5: Mazat marketing od shop.cz'
+    }
+  },
+
+  // 3. AI navrhuje odpovědět - business inquiry
+  {
+    email_id: 'e3',
+    from: { email: 'jan.novak@firma.cz', name: 'Jan Novák' },
+    subject: 'Poptávka cloudových služeb',
+    snippet: 'Dobrý den, zajímá nás vaše nabídka pro 50 zaměstnanců...',
+    body: 'Dobrý den,\n\nchtěl bych se zeptat na vaši nabídku cloudových služeb pro firmu s ~50 zaměstnanci.\n\nJaká je cena a jak dlouho trvá implementace?\n\nS pozdravem,\nJan Novák',
+    date: '2025-11-23T12:00:00Z',
+    is_read: false,
+    has_attachment: false,
+    labels: [],
+    ai_recommendation: {
+      action: 'respond',
+      urgency: 'medium',
+      reason: 'Obchodní poptávka vyžaduje odpověď'
+    }
+  },
+
+  // 4. Quick reply suggestion
+  {
+    email_id: 'e4',
+    from: { email: 'anna@client.cz', name: 'Anna Svobodová' },
+    subject: 'Potvrzení schůzky',
+    snippet: 'Potvrzuji schůzku na úterý v 14:00',
+    body: 'Dobrý den,\n\npotvrzuji schůzku na úterý v 14:00.\n\nDěkuji,\nAnna',
+    date: '2025-11-23T11:00:00Z',
+    is_read: false,
+    has_attachment: false,
+    labels: [],
+    ai_recommendation: {
+      action: 'quick_reply',
+      urgency: 'low',
+      quick_replies: ['👍 Potvrzeno', '✅ V pořádku', '📅 Těším se']
+    }
+  },
+
+  // 5. AI navrhuje smazat - notification spam
+  {
+    email_id: 'e5',
+    from: { email: 'notifications@github.com', name: 'GitHub' },
+    subject: '[Deploy] Success: production-api',
+    snippet: 'Your deployment was successful...',
+    body: 'Deployment to production-api was successful.\nCommit: 839210\nTime: 14s',
+    date: '2025-11-23T10:30:00Z',
+    is_read: false,
+    has_attachment: false,
+    labels: [],
+    ai_recommendation: {
+      action: 'auto_delete',
+      rule_id: 'rule_12',
+      reason: 'Pravidlo #12: Mazat GitHub deploy notifikace'
     }
   }
 ];

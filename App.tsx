@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, List, PieChart, Settings, Mail } from 'lucide-react';
+import { LayoutDashboard, List, PieChart, Settings, Mail, Bot } from 'lucide-react';
 
 import { Proposal, Rule, StatsData, ChatMessage, InboxEmail } from './types';
 import { INITIAL_PROPOSALS, INITIAL_RULES, INITIAL_STATS, MOCK_INBOX_EMAILS } from './services/mockData';
@@ -84,10 +84,9 @@ export default function App() {
     alert("Funkce pro manuální vytvoření pravidla by zde otevřela modální okno.");
   };
 
-  // --- Handlers: Inbox ---
+  // --- Handlers: Inbox / AI Asistent ---
   const handleSelectEmail = (email: InboxEmail) => {
     setSelectedEmail(email);
-    console.log('Selected email:', email);
   };
 
   const handleForward = (emailId: string, to: string[], message: string) => {
@@ -100,6 +99,29 @@ export default function App() {
     console.log('Generate AI response for email:', emailId);
     // TODO: AI response generation
     alert('AI response - coming soon!');
+  };
+
+  const handleConfirmDelete = async (emailId: string) => {
+    // TODO: API call - DELETE /api/emails/:id
+    setInboxEmails(prev => prev.filter(e => e.email_id !== emailId));
+    setStats(prev => ({ ...prev, actions_automated: prev.actions_automated + 1 }));
+    // Simulate toast
+    console.log('Email smazán');
+  };
+
+  const handleCancelDelete = async (emailId: string, ruleId?: string) => {
+    // TODO: API call - POST /api/actions/cancel
+    // Odstraní email z pending deletions (zde ho jen schováme z listu)
+    setInboxEmails(prev => prev.filter(e => e.email_id !== emailId));
+    if (ruleId) {
+        console.log(`Pravidlo ${ruleId} možná potřebuje úpravu.`);
+    }
+    alert('Email ponechán v inboxu (akce zrušena)');
+  };
+
+  const handleSkipEmail = async (emailId: string) => {
+    // Jen schová z "vyžadují pozornost"
+    setInboxEmails(prev => prev.filter(e => e.email_id !== emailId));
   };
 
   // --- Chat Logic ---
@@ -169,9 +191,9 @@ export default function App() {
               <NavButton 
                 active={activeTab === 'inbox'} 
                 onClick={() => setActiveTab('inbox')} 
-                icon={<Mail className="w-4 h-4"/>}
+                icon={<Bot className="w-4 h-4"/>}
               >
-                Inbox
+                AI Asistent
               </NavButton>
               <NavButton active={activeTab === 'proposals'} onClick={() => setActiveTab('proposals')} icon={<List className="w-4 h-4"/>}>Návrhy</NavButton>
               <NavButton active={activeTab === 'rules'} onClick={() => setActiveTab('rules')} icon={<LayoutDashboard className="w-4 h-4"/>}>Pravidla</NavButton>
@@ -181,7 +203,7 @@ export default function App() {
             
             <div className="flex items-center md:hidden">
                 {/* Mobile Menu Placeholder - keeping simple for this output */}
-                 <span className="text-xs text-slate-400">v1.0</span>
+                 <span className="text-xs text-slate-400">v1.1</span>
             </div>
           </div>
         </div>
@@ -195,6 +217,9 @@ export default function App() {
             onSelectEmail={handleSelectEmail}
             onForward={handleForward}
             onAIResponse={handleAIResponse}
+            onConfirmDelete={handleConfirmDelete}
+            onCancelDelete={handleCancelDelete}
+            onSkipEmail={handleSkipEmail}
           />
         )}
 
@@ -243,8 +268,8 @@ export default function App() {
           <MobileNavButton 
             active={activeTab === 'inbox'} 
             onClick={() => setActiveTab('inbox')} 
-            icon={<Mail size={20}/>} 
-            label="Inbox" 
+            icon={<Bot size={20}/>} 
+            label="AI Asistent" 
           />
           <MobileNavButton active={activeTab === 'proposals'} onClick={() => setActiveTab('proposals')} icon={<List size={20}/>} label="Návrhy" />
           <MobileNavButton active={activeTab === 'rules'} onClick={() => setActiveTab('rules')} icon={<LayoutDashboard size={20}/>} label="Pravidla" />
